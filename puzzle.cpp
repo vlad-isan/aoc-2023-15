@@ -4,7 +4,7 @@
 
 #include "puzzle.h"
 
-int puzzle_sample_1(const std::string &base_file_path) {
+uint64_t puzzle_sample_1(const std::string &base_file_path) {
     std::string file_path = fmt::format("{}/{}", base_file_path, "puzzle-input-sample-1.txt");
 
     std::ifstream file(file_path);
@@ -20,7 +20,7 @@ int puzzle_sample_1(const std::string &base_file_path) {
     return do_puzzle_1(file);
 }
 
-int puzzle_sample_2(const std::string &base_file_path) {
+uint64_t puzzle_sample_2(const std::string &base_file_path) {
     std::string file_path = fmt::format("{}/{}", base_file_path, "puzzle-input-sample-2.txt");
 
     std::ifstream file(file_path);
@@ -36,7 +36,7 @@ int puzzle_sample_2(const std::string &base_file_path) {
     return do_puzzle_2(file);
 }
 
-int puzzle_1(const std::string &base_file_path) {
+uint64_t puzzle_1(const std::string &base_file_path) {
     std::string file_path = fmt::format("{}/{}", base_file_path, "puzzle-input-1.txt");
 
     std::ifstream file(file_path);
@@ -52,7 +52,7 @@ int puzzle_1(const std::string &base_file_path) {
     return do_puzzle_1(file);
 }
 
-int puzzle_2(const std::string &base_file_path) {
+uint64_t puzzle_2(const std::string &base_file_path) {
     std::string file_path = fmt::format("{}/{}", base_file_path, "puzzle-input-2.txt");
 
     std::ifstream file(file_path);
@@ -68,7 +68,14 @@ int puzzle_2(const std::string &base_file_path) {
     return do_puzzle_2(file);
 }
 
-int do_puzzle_1(std::ifstream &file) {
+uint64_t do_puzzle_1(std::ifstream &file) {
+    std::string line;
+    std::getline(file, line);
+
+    return hash(line);
+}
+
+uint64_t do_puzzle_2(std::ifstream &file) {
     std::string line;
 
     while (std::getline(file, line)) {
@@ -78,12 +85,23 @@ int do_puzzle_1(std::ifstream &file) {
     return 0;
 }
 
-int do_puzzle_2(std::ifstream &file) {
-    std::string line;
+uint64_t hash(const std::string &str) {
+    std::string seq{};
+    std::istringstream iss(str);
 
-    while (std::getline(file, line)) {
-        fmt::println("{}", line);
+    uint64_t sum = 0;
+
+    while(std::getline(iss, seq, ',')) {
+        uint64_t hash = 0;
+
+        for (char c : seq) {
+            hash += c;
+            hash *= 17;
+            hash %= 256;
+        }
+
+        sum += hash;
     }
 
-    return 0;
+    return sum;
 }
